@@ -1,0 +1,2 @@
+# don't provide JSON payload files
+*.json
