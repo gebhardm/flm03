@@ -1,7 +1,6 @@
-This document collects information on MQTT messages published by the Fluksometer v03E ([FLM03E](https://www.flukso.net/content/overdue-status-update)); refer to [flukso.net](http://flukso.net) for further information on Flukso.
+This document collects information on MQTT messages published by the Fluksometer v03E ([FLM03E](https://www.flukso.net/content/overdue-status-update)); refer to [flukso.net](http://flukso.net) for further information on the idea behind _Flukso_.
 
 Note: MQTT topics of FLM02 and FLM03 are to some extent INCOMPATIBLY different; thus, currently existing subscription functionality (at least that provided by me) is NOT working out-of-the-box; depending on my investigations I will decide on how to adapt.
-
 
 # Device topics
 Device topics of the Fluksometer start with ```/device/<device_id>/```.
@@ -48,7 +47,7 @@ The ```kube``` topic contains information on the paired FluksoKubes. By default,
     }
 
 ### sensor
-The ```sensor``` topic publishes the actual sensor configuration which enumerates to up to 128 different types of information plus configuration of tmpo, mqtt, and daemon. With just three current clamps attached, there are already 39 different types of values available. Non-assigned sensor data provides the sensor ```ìd``` only.
+The ```sensor``` topic publishes the actual sensor configuration which enumerates to up to 128 different types of information plus configuration of ```tmpo```, ```mqtt```, and ```daemon```. With just three current clamps attached, there are already 39 different types of values available. Non-assigned sensor data provides the sensor ```ìd``` only.
 
 	"ENUM": {
     	"type": "electricity",
@@ -116,7 +115,7 @@ The topics ```/sensor/<sensor_id>/gauge``` publish gauge values of the respectiv
 ## Counters
 In analogy to the gauges, the counter topic ```/sensor/<sensor_id>/counter``` delivers counter values of the respective sensor collected as "Wh" and "VARh".
 
-	/sensor/<sensor_id>/counter [<timestamp>, <decimal vlaue with three digits>, "unit"]
+	/sensor/<sensor_id>/counter [<timestamp>, <decimal value with three digits>, "unit"]
 	
 ## TMPO
 For synchronizing readings with the Flukso website, the FLM publishes a ```tmpo``` topic, transferring readings as a gzipped payload
@@ -125,6 +124,7 @@ For synchronizing readings with the Flukso website, the FLM publishes a ```tmpo`
 	
 Refer to the [TMPO retrieval info](https://github.com/gebhardm/energyhacks/tree/master/Flukso/tmpo) for further details.
 
-# Issues
-Even though set to "3p+n" still all current clamps' data are sent to the Flukso site and published via MQTT; I would have assumed that then current clamp readings are collected into  
-totally into "sensor 1".
+# Open points
+* Differences between settings "1p", "3p+n", and "3p-n"
+* Meaning of parameters theta and alpha
+* Meaning of parameter shift
