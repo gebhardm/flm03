@@ -1,2 +1,4 @@
 # don't provide JSON payload files
 *.json
+# and don't provide node modules, if any
+node_modules/

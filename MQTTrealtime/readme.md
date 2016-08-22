@@ -1,7 +1,7 @@
 # MQTT Realtime Graph
 As a tool to debug the new Fluksometer version 3 this little webserver enables a realtime graph of the provided voltage or current readings via MQTT over websockets (apply what you want in the [topic subscription](index.js#L34)).
 
-If you want to use this also, make sure to change the mqtt broker's address in [mqttrealtime.js](index.js#L14) to that of your FLM03; start the server (whic actually just serves the [index.html](index.html)) with ```node mqttrealtime.js```.
+If you want to use this also, make sure to change the mqtt broker's address in [index.js](index.js#L14) to that of your FLM03; start the server (whic actually just serves the [index.html](index.html)) with ```node mqttrealtime.js``` - no ```npm install``` required this time.
 
 <img src="images/FLM03_currents.gif" width=400px>
 
