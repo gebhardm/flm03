@@ -1,4 +1,4 @@
-var ctx = document.getElementById("graph").getContext("2d");
+var ctx = document.getElementById("chart").getContext("2d");
 
 var myChart;
 
@@ -21,6 +21,8 @@ var client;
 
 var reconnectTimeout = 2e3;
 
+var subscription = "/device/+/flx/current/+";
+
 function mqttConnect() {
     client = new Paho.MQTT.Client(mqttBroker, mqttPort, "", clientId);
     client.onConnectionLost = onConnectionLost;
@@ -31,7 +33,9 @@ function mqttConnect() {
 }
 
 function onConnect() {
-    client.subscribe("/device/+/flx/current/+");
+    if (subscription !== undefined) {
+        client.subscribe(subscription);
+    }
 }
 
 function onConnectionLost(responseObj) {
@@ -53,11 +57,6 @@ function onMessageArrived(mqttMsg) {
         console.log("Error parsing JSON");
         return;
     }
-    if (payload[2] === "mV") {
-        var series = payload[1];
-        for (var val in series) series[val] = series[val] / 1e3;
-        payload[2] = "V";
-    }
     msg = {
         phase: phase,
         data: payload[1]
@@ -73,17 +72,17 @@ function displayGraph(msg) {
                 label: "L1",
                 fill: false,
                 borderColor: "#f00",
-                data: msg.data
+                data: []
             }, {
                 label: "L2",
                 fill: false,
                 borderColor: "#0f0",
-                data: msg.data
+                data: []
             }, {
                 label: "L3",
                 fill: false,
                 borderColor: "#00f",
-                data: msg.data
+                data: []
             } ]
         };
         myChart = new Chart(ctx, {
@@ -91,10 +90,19 @@ function displayGraph(msg) {
             data: data,
             options: options
         });
-    } else {
-        myChart.data.datasets[msg.phase - 1].data = msg.data;
-        myChart.update();
     }
+    myChart.data.datasets[msg.phase - 1].data = msg.data;
+    myChart.update();
+}
+
+function handleSel(sel) {
+    if (subscription != sel.value && subscription !== undefined) {
+        if (client !== undefined) {
+            client.unsubscribe(subscription);
+            client.subscribe(sel.value);
+        }
+    }
+    subscription = sel.value;
 }
 
 mqttConnect();

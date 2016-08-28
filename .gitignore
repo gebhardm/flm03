@@ -1,3 +1,5 @@
+# don't version nohup.out
+nohup.out
 # don't provide JSON payload files
 *.json
 # and don't provide node modules, if any

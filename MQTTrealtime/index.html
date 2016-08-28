@@ -5,15 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MQTT realtime graph display">
     <title>MQTT Realtime Graph</title>
+    <!-- stylesheet from getbootstrap.com -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- mqttws31.js for communication -->
     <script type="text/javascript" src="js/mqttws31.js"></script>
     <!-- chart.js for charting -->
     <script type="text/javascript" src="js/Chart.min.js"></script>
   </head>
   <body>
-    <div align="center">
-    <canvas id="graph" width="100" height="100"></canvas>
+<div class="container-fluid"  collapse="cfgCollapsed">
+    <div class="accordion-group">
+        <div class="accordion-inner" id="cfg">
+            <div class="radio">
+                <label><input type="radio" name="subscription" onclick="handleSel(this);" value="/device/+/flx/current/+" checked>Current</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="subscription" onclick="handleSel(this);" value="/device/+/flx/voltage/+">Voltage</label>
+            </div>
+        </div>
     </div>
+</div>
+<div class="container-fluid">
+    <div class="accordion-group">
+        <div class="accordion-inner">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+</div>
     <!-- this page's functionality -->
     <script type="text/javascript" src="index.js"></script>
   </body>
