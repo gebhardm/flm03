@@ -11,6 +11,8 @@ var options = {
     }
 };
 
+var datasets = [];
+
 var mqttBroker = "192.168.0.55";
 
 var mqttPort = 8083;
@@ -21,7 +23,7 @@ var client;
 
 var reconnectTimeout = 2e3;
 
-var subscription = "/device/+/flx/current/+";
+var subscription = "/device/+/flx/+/+";
 
 function mqttConnect() {
     client = new Paho.MQTT.Client(mqttBroker, mqttPort, "", clientId);
@@ -46,44 +48,52 @@ function onConnectionLost(responseObj) {
 }
 
 function onMessageArrived(mqttMsg) {
-    var msg = {};
-    var payload, phase, topic;
-    topic = mqttMsg.destinationName.split("/");
-    phase = topic[topic.length - 1];
-    payload = mqttMsg.payloadString;
+    var topic = mqttMsg.destinationName.split("/");
+    var type = topic[topic.length - 2];
+    var phase = topic[topic.length - 1];
+    var label = type + "_L" + phase;
+    var payload = mqttMsg.payloadString;
+    var idx;
     try {
         payload = JSON.parse(payload);
     } catch (error) {
         console.log("Error parsing JSON");
         return;
     }
-    msg = {
-        phase: phase,
-        data: payload[1]
-    };
-    displayGraph(msg);
+    if (payload[2] === "mV") {
+        for (var i = 0; i < payload[1].length; i++) {
+            payload[1][i] /= 1e3;
+        }
+        payload[2] = "V";
+    }
+    var index = -1;
+    for (idx = 0; idx < datasets.length; idx++) {
+        if (datasets[idx].label === label) index = idx;
+    }
+    if (index === -1) {
+        var red = Math.floor(Math.random() * 255);
+        var green = Math.floor(Math.random() * 255);
+        var blue = Math.floor(Math.random() * 255);
+        dataset = {
+            label: label,
+            fill: false,
+            borderColor: "rgba(" + red + "," + green + "," + blue + ",1)",
+            data: payload[1]
+        };
+        datasets.push(dataset);
+    } else {
+        datasets[index].data = payload[1];
+    }
+    displayGraph(datasets);
 }
 
-function displayGraph(msg) {
+function displayGraph(datasets) {
     if (myChart === undefined) {
+        var labels = [];
+        for (var i = 0; i < 32; i++) labels.push(i);
         data = {
-            labels: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ],
-            datasets: [ {
-                label: "L1",
-                fill: false,
-                borderColor: "#f00",
-                data: []
-            }, {
-                label: "L2",
-                fill: false,
-                borderColor: "#0f0",
-                data: []
-            }, {
-                label: "L3",
-                fill: false,
-                borderColor: "#00f",
-                data: []
-            } ]
+            labels: labels,
+            datasets: datasets
         };
         myChart = new Chart(ctx, {
             type: "line",
@@ -91,18 +101,8 @@ function displayGraph(msg) {
             options: options
         });
     }
-    myChart.data.datasets[msg.phase - 1].data = msg.data;
+    myChart.data.datasets = datasets;
     myChart.update();
-}
-
-function handleSel(sel) {
-    if (subscription != sel.value && subscription !== undefined) {
-        if (client !== undefined) {
-            client.unsubscribe(subscription);
-            client.subscribe(sel.value);
-        }
-    }
-    subscription = sel.value;
 }
 
 mqttConnect();
