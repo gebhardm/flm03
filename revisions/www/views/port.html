@@ -1,0 +1,119 @@
+<div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+<form name="portForm" class="form-horizontal">
+    <div class="well well-large">
+        <div class="control-group">
+            <label for="phase" class="control-label">Electrical System</label>
+            <div class="controls">
+                <select name="phase" ng-model="ports.main.phase" ng-disabled="disable('phase')">
+                    <option>1phase</option>
+                    <option>3phase with N</option>
+                    <option>3phase without N</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="math" class="control-label">Math</label>
+            <div class="controls">
+                <select name="math" ng-model="ports.main.math" ng-disabled="disable('math')">
+                    <option>none</option>
+                    <option>port 2 + port 1</option>
+                    <option>port 1 + port 2 + port 3</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="led" class="control-label">LED mode</label>
+            <div class="controls">
+                <select name="led" ng-model="ports.main.led_mode" ng-disabled="disable('led')">
+                    <option>heartbeat</option>
+                    <option>port 4</option>
+                    <option>port 5</option>
+                    <option>port 6</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="well well-large">
+        <div class="control-group">
+            <label for="port" class="control-label"><strong>Port</strong></label>
+            <div class="controls">
+                <strong><pagination total-items="noOfPorts" items-per-page="1" ng-model="i" class="port" previous-text="&laquo;" next-text="&raquo;"></pagination></strong>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="enable" class="control-label">Enable</label>
+            <div class="controls">
+                <input name="enable" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ports[i].enable" ng-disabled="disable('enable')">
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="class" class="control-label">Class</label>
+            <div class="controls">
+                <input name="class" type="text" ng-model="ports[i].class" disabled>
+            </div>
+        </div>
+        <div class="control-group" ng-show="show('trigger')">
+            <label for="trigger" class="control-label">Trigger</label>
+            <div class="controls">
+                <select name="type" ng-model="ports[i].trigger" ng-disabled="disable('trigger')">
+                    <option>edge</option>
+                    <option>level</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group" ng-show="show('type')">
+            <label for="type" class="control-label">Type</label>
+            <div class="controls">
+                <select name="type" ng-model="ports[i].type" ng-disabled="disable('type')">
+                    <option>electricity</option>
+                    <option>heat</option>
+                    <option>water</option>
+                    <option>gas</option>
+                    <option>fuel</option>
+                    <option>pellet</option>
+                    <option>time</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="name" class="control-label">Name</label>
+            <div class="controls">
+                <input name="name" type="text" ng-model="ports[i].name" ng-pattern="patternName" ng-disabled="disable('name')" ng-required="!disable('name')">
+                <span class="help-inline error" ng-show="portForm.name.$error.required && !portForm.name.$pristine">Required field.</span>
+                <span class="help-inline error" ng-show="portForm.name.$error.pattern && !portForm.name.$pristine">Wrong format. Only use alphanumeric, space, underscore and hyphen characters.</span>
+            </div>
+        </div>
+        <div class="control-group" ng-show="show('current')">
+            <label for="current" class="control-label">Current</label>
+            <div class="controls">
+                <select name="current" ng-model="ports[i].current" ng-disabled="disable('current')">
+                    <option>50</option>
+                    <option>100</option>
+                    <option>250</option>
+                    <option>500</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group" ng-show="show('constant')">
+            <label for="constant" class="control-label">Constant</label>
+            <div class="controls">
+                <input name="constant" type="text" ng-model="ports[i].constant" ng-pattern="patternConstant" ng-disabled="disable('constant')" ng-required="!disable('constant')">
+                <span class="help-inline error" ng-show="portForm.constant.$error.required">Required field.</span>
+                <span class="help-inline error" ng-show="portForm.constant.$error.pattern">Wrong number format.<ul><li>Meter constants for electricity are expressed in Wh/pulse.</li><li>Meter constants for water and gas are entered in L/pulse.</li><li>Meter constants can range from 0.001 to 65535.999.</li><li>Decimal values should use a dot, not a comma.</li></ul></span>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button class="btn btn-success port" ng-click="commit()" ng-disabled="portForm.$invalid">Save</button>
+            <button class="btn btn-success port" ng-click="match()">Match Phases</button>
+            <button class="btn btn-success port" ng-click="sensors()">Sensors</button>
+        </div>
+    </div>
+</form>
+<div ng-show="debug">
+    {{ports}}
+    {{flukso}}
+</div>

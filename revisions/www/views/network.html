@@ -1,0 +1,96 @@
+<div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+
+<form name="networkForm" class="form-horizontal" ng-submit="save()">
+    <div class="well well-large">
+        <div class="control-group">
+            <label for="network" class="control-label">Network</label>
+            <div class="controls">
+                <select name="interface" ng-model="interface">
+                    <option>wifi</option>
+                    <option>ethernet</option>
+                    <option>3g</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="well well-large" ng-show="interface=='wifi'">
+        <div class="control-group">
+            <label for="ssid" class="control-label">SSID</label>
+            <div class="controls">
+                <select name="ssid" ng-model="ssid" ng-required="true" ng-disabled="ssidDisable">
+                    <option ng-repeat="ap in aps">{{ap.ssid}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="channel" class="control-label">Channel</label>
+            <div class="controls">
+                <input name="channel" type="text" ng-model="aps[ssid].channel" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="quality" class="control-label">Signal Quality</label>
+            <div class="controls">
+                <input name="quality" type="text" ng-model="aps[ssid].quality" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="encryption" class="control-label">Encryption</label>
+            <div class="controls">
+                <input name="encryption" type="text" ng-model="aps[ssid].encryption.description" disabled>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="key" class="control-label">Key</label>
+            <div class="controls">
+                <input name="key" type="text" ng-model="key" ng-pattern="patternKey" ng-disabled="disable()" ng-required="!disable()">
+                <span class="help-inline error" ng-show="networkForm.key.$error.required && !networkForm.key.$pristine">Required field.</span>
+                <span class="help-inline error" ng-show="networkForm.key.$error.pattern && !networkForm.key.$pristine">Wrong format. Use either 5/13 ASCII or 10/26 HEX characters as WEP key. A valid ASCII-based key will be translated into a HEX-based one. For WPA(2)-PSK encrypted networks, please enter your 8-to-63-character passphrase.
+            </span>
+            </div>
+        </div>
+    </div>
+    <div class="well well-large" ng-show="interface=='3g'">
+        <div class="control-group">
+            <label for="apn" class="control-label">APN</label>
+            <div class="controls">
+                <input name="apn" type="text" ng-model="network.wan.apn" ng-pattern="patternApn" ng-required="interface=='3g'">
+                <span class="help-inline error" ng-show="networkForm.apn.$error.required && !networkForm.apn.$pristine">Required field.</span>
+                <span class="help-inline error" ng-show="networkForm.apn.$error.pattern && !networkForm.apn.$pristine">Wrong format. Only alphanumeric, underscore, hyphen and dot characters allowed.</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="pincode" class="control-label">Pincode</label>
+            <div class="controls">
+                <input name="pincode" type="text" ng-model="network.wan.pincode" ng-pattern="patternPincode" ng-required="interface=='3g'">
+                <span class="help-inline error" ng-show="networkForm.pincode.$error.required && !networkForm.pincode.$pristine">Required field.</span>
+                <span class="help-inline error" ng-show="networkForm.pincode.$error.pattern && !networkForm.pincode.$pristine">Wrong format. A 4-digit code is expected.</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="username" class="control-label">Username</label>
+            <div class="controls">
+                <input name="username" type="text" ng-model="network.wan.username" ng-required="false">
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="password" class="control-label">Password</label>
+            <div class="controls">
+                <input name="password" type="text" ng-model="network.wan.password" ng-required="false">
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-success" ng-disabled="networkForm.$invalid && (interface=='wifi' || interface=='3g')">Save</button>
+        </div>
+    </div>
+</form>
+
+<div ng-show="debug">
+    {{ssid}}
+    {{wireless}}
+    {{aps}}
+</div>
