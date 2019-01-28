@@ -6,19 +6,27 @@
         <div class="control-group">
             <label for="phase" class="control-label">Electrical System</label>
             <div class="controls">
-                <select name="phase" ng-model="ports.main.phase" ng-disabled="disable('phase')">
+                <select name="phase" ng-model="ports.main.phase" ng-change="change()">
                     <option>1phase</option>
                     <option>3phase with N</option>
                     <option>3phase without N</option>
                 </select>
             </div>
         </div>
-        <div class="control-group">
-            <label for="math" class="control-label">Math</label>
+        <div class="control-group" ng-show="ports.main.phase == '1phase'">
+            <label for="math1" class="control-label">Math</label>
             <div class="controls">
-                <select name="math" ng-model="ports.main.math" ng-disabled="disable('math')">
+                <select name="math1" ng-model="ports.main.math1" ng-change="change()">
                     <option>none</option>
                     <option>port 2 + port 1</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group" ng-show="ports.main.phase != '1phase'">
+            <label for="math3" class="control-label">Math</label>
+            <div class="controls">
+                <select name="math3" ng-model="ports.main.math3">
+                    <option>none</option>
                     <option>port 1 + port 2 + port 3</option>
                 </select>
             </div>
@@ -26,7 +34,7 @@
         <div class="control-group">
             <label for="led" class="control-label">LED mode</label>
             <div class="controls">
-                <select name="led" ng-model="ports.main.led_mode" ng-disabled="disable('led')">
+                <select name="led" ng-model="ports.main.led_mode">
                     <option>heartbeat</option>
                     <option>port 4</option>
                     <option>port 5</option>

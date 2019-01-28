@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Local Fluksometer Access</title>
+    <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -22,22 +22,20 @@
     <!-- Add your site or application content here -->
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
-        <div ng-controller="MenuCtrl">
-          <div class="container">
-            <a class="brand" href="/#/">
-              <img alt="Flukso" src="/img/flukso.logo.png">
-            </a>
-            <ul class="nav">
-              <li dropdown ng-repeat="menu in menus">
-                 <a href dropdown-toggle>{{menu.title}}</a>
-                 <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                   <li ng-repeat="submenu in menu.menus">
-                     <a href="{{submenu.action}}">{{submenu.title}}</a>
-                   </li>
-                 </ul>
-              </li>
-            </ul>
-          </div>
+        <div class="container">
+          <a class="brand" href="/">
+            <img alt="Flukso" src="/img/flukso.logo.png">
+          </a>
+          <ul class="nav">
+            <li><a href="#/status"><status>status</status></a></li>
+            <li><a href="#/network"><network>network</network></a></li>
+            <li><a href="#/port"><port>port</port></a></li>
+            <li><a href="#/kube"><kube>kube</kube></a></li>
+            <li><a href="#/gauge"><gauge>gauge</gauge></a></li>
+            <li><a href="#/syslog"><syslog>syslog</syslog></a></li>
+            <li><a href="#/mqtt"><mqtt>mqtt</mqtt></a></li>
+            <li><a href="#/test"><test>test</test></a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -52,15 +50,6 @@
     <script src="components/justgage/justgage.min.js"></script>
     <script src="components/mqttws/mqttws31-min.js"></script>
 
-    <!-- additional libraries for FLM visualization -->
-    <script type="text/javascript" src="components/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="components/jquery/jquery.sparkline.min.js"></script>
-    <script type="text/javascript" src="components/jquery/jquery.flot.js"></script>
-    <script type="text/javascript" src="components/jquery/jquery.flot.time.js"></script>
-    <script type="text/javascript" src="components/jquery/jquery.flot.selection.js"></script>
-    <script type="text/javascript" src="components/chart/Chart.min.js"></script>
-    <script type="text/javascript" src="components/gzip/gunzip.min.js"></script>
-
     <!-- build:js scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
@@ -72,14 +61,6 @@
     <script src="scripts/controllers/syslog.js"></script>
     <script src="scripts/controllers/mqtt.js"></script>
     <script src="scripts/controllers/test.js"></script>
-
-    <!-- additional controllers for FLM visualization -->
-    <script src="scripts/controllers/chart.js"></script>
-    <script src="scripts/controllers/consumption.js"></script>
-    <script src="scripts/controllers/gauge_generic.js"></script>
-    <script src="scripts/controllers/graph.js"></script>
-    <script src="scripts/controllers/panel.js"></script>
-    <script src="scripts/controllers/realtime.js"></script>
     <!-- endbuild -->
   </body>
 </html>
